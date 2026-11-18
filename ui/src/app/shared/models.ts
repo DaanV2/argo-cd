@@ -643,6 +643,7 @@ export interface AuthSettings {
     uiBannerPermanent: boolean;
     uiBannerPosition: string;
     uiLoginButtonText: string;
+    uiTitle: string;
     execEnabled: boolean;
     appsInAnyNamespaceEnabled: boolean;
     hydratorEnabled: boolean;

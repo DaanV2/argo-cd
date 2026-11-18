@@ -1,3 +1,4 @@
+import {PageContext} from 'argo-ui';
 import * as React from 'react';
 
 import Helmet from 'react-helmet';
@@ -13,6 +14,7 @@ const PodsLogsViewer = lazyWithBoundary(
 
 export const ApplicationFullscreenLogs = (props: RouteComponentProps<{name: string; appnamespace: string; container: string; namespace: string}>) => {
     const query = useSearchParams();
+    const {title: pageTitle} = React.useContext(PageContext);
 
     const podName = query.get('podName');
     const name = query.get('name');
@@ -22,7 +24,7 @@ export const ApplicationFullscreenLogs = (props: RouteComponentProps<{name: stri
     const fullscreen = true;
     return (
         <div className='application-fullscreen-logs'>
-            <Helmet title={`${title} - Argo CD`} />
+            <Helmet title={`${title} - ${pageTitle}`} />
             <h4 style={{fontSize: '18px', textAlign: 'center'}}>{title}</h4>
             <PodsLogsViewer
                 applicationName={props.match.params.name}

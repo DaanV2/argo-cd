@@ -384,6 +384,10 @@ data:
   # Optional override for the SSO login button label.
   # ui.loginButtonText: "SSO Login"
 
+  # Optional override for the application name shown in the browser tab title. Defaults to "Argo CD",
+  # which produces titles such as "Applications - Argo CD".
+  # ui.title: "Argo CD | Prod"
+
   # Application reconciliation timeout is the amount of time spent before Argo tries to discover if a new manifests version got
   # published to the repository. Reconciliation by timeout is disabled if timeout is set to 0. Two minutes by default with additional jitter.
   # For the argocd-repo-server this setting defines the expiration

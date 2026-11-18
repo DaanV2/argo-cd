@@ -148,6 +148,8 @@ type ArgoCDSettings struct {
 	ResourceViewEnabled bool `json:"resourceViewEnabled"`
 	// UiLoginButtonText is an optional override for the SSO login button label
 	UiLoginButtonText string `json:"uiLoginButtonText,omitempty"` //nolint:revive //FIXME(var-naming)
+	// UiTitle is an optional override for the application name shown in the browser tab title
+	UiTitle string `json:"uiTitle,omitempty"` //nolint:revive //FIXME(var-naming)
 	// PasswordPattern for password regular expression
 	PasswordPattern string `json:"passwordPattern,omitempty"`
 	// BinaryUrls contains the URLs for downloading argocd binaries
@@ -545,6 +547,8 @@ const (
 	settingUIResourcesViewDisabledKey = "ui.view.resources.disabled"
 	// settingUILoginButtonTextKey designates the key for the custom SSO login button label
 	settingUILoginButtonTextKey = "ui.loginButtonText"
+	// settingUITitleKey designates the key for the custom application name used in the browser tab title
+	settingUITitleKey = "ui.title"
 	// settingsBinaryUrlsKey designates the key for the argocd binary URLs
 	settingsBinaryUrlsKey = "help.download"
 	// settingsSourceHydratorCommitMessageTemplateKey is the key for the hydrator commit message template
@@ -1771,6 +1775,7 @@ func updateSettingsFromConfigMap(settings *ArgoCDSettings, argoCDCM *corev1.Conf
 	settings.UiBannerPosition = argoCDCM.Data[settingUIBannerPositionKey]
 	settings.ResourceViewEnabled = argoCDCM.Data[settingUIResourcesViewDisabledKey] != "true"
 	settings.UiLoginButtonText = argoCDCM.Data[settingUILoginButtonTextKey]
+	settings.UiTitle = strings.TrimSpace(argoCDCM.Data[settingUITitleKey])
 	settings.BinaryUrls = getDownloadBinaryUrlsFromConfigMap(argoCDCM)
 	if err := ValidateExternalURL(argoCDCM.Data[settingURLKey]); err != nil {
 		log.Warnf("Failed to validate URL in configmap: %v", err)

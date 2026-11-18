@@ -104,6 +104,24 @@ func TestSettingsServer(t *testing.T) {
 		assert.Equal(t, "Sign in with SSO", resp.UiLoginButtonText)
 	})
 
+	t.Run("TestGetUITitleNotLoggedIn", func(t *testing.T) {
+		t.Parallel()
+		settingsServer := newServer(map[string]string{
+			"ui.title": "Argo CD | Prod",
+		})
+		resp, err := settingsServer.Get(t.Context(), nil)
+		require.NoError(t, err)
+		assert.Equal(t, "Argo CD | Prod", resp.UiTitle)
+	})
+
+	t.Run("TestGetUITitleDefaultEmpty", func(t *testing.T) {
+		t.Parallel()
+		settingsServer := newServer(map[string]string{})
+		resp, err := settingsServer.Get(t.Context(), nil)
+		require.NoError(t, err)
+		assert.Empty(t, resp.UiTitle)
+	})
+
 	t.Run("TestGetResourceOverridesNotLoggedIn", func(t *testing.T) {
 		t.Parallel()
 		settingsServer := newServer(map[string]string{

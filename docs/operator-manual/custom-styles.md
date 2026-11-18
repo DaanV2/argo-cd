@@ -155,3 +155,23 @@ data:
 ```
 
 If `ui.loginButtonText` is set, it takes precedence over the provider-derived label. If not set, the default behavior is preserved.
+
+## Browser Tab Title
+
+By default, the browser tab title of every page ends with `Argo CD`, for example `Applications - Argo CD`. When you run several Argo CD instances, you can replace `Argo CD` with your own text using the `ui.title` field in the `argocd-cm` ConfigMap, so that each instance is easy to tell apart.
+
+### argocd-cm
+```yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  ui.title: "Argo CD | Prod"
+```
+
+With the configuration above, the Applications page is shown as `Applications - Argo CD | Prod` in the browser tab.
+
+> [!NOTE]
+> The setting is also applied on the login page, so the value is visible to users who are not logged in. Leading and trailing whitespace is ignored, and an empty value falls back to `Argo CD`.

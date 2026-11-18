@@ -277,6 +277,29 @@ func TestGetInstallationID(t *testing.T) {
 	assert.Equal(t, "123456789", id)
 }
 
+func TestGetUITitle(t *testing.T) {
+	tests := []struct {
+		name     string
+		data     map[string]string
+		expected string
+	}{
+		{name: "not set", data: map[string]string{}, expected: ""},
+		{name: "set", data: map[string]string{"ui.title": "Argo CD | Prod"}, expected: "Argo CD | Prod"},
+		{name: "surrounding whitespace is trimmed", data: map[string]string{"ui.title": "  Argo CD | Stage \n"}, expected: "Argo CD | Stage"},
+		{name: "whitespace only is treated as not set", data: map[string]string{"ui.title": "   "}, expected: ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, settingsManager := fixtures(t.Context(), tt.data, func(secret *corev1.Secret) {
+				secret.Data["server.secretkey"] = []byte("secret")
+			})
+			settings, err := settingsManager.GetSettings()
+			require.NoError(t, err)
+			assert.Equal(t, tt.expected, settings.UiTitle)
+		})
+	}
+}
+
 func TestApplicationFineGrainedRBACInheritanceDisabledDefault(t *testing.T) {
 	_, settingsManager := fixtures(t.Context(), nil)
 	flag, err := settingsManager.ApplicationFineGrainedRBACInheritanceDisabled()

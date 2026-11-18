@@ -26,6 +26,9 @@ const base = bases.length > 0 ? bases[0].getAttribute('href') || '/' : '/';
 export const history = createBrowserHistory({basename: base});
 requests.setBaseHRef(base);
 
+// DEFAULT_UI_TITLE is the application name shown in the browser tab title, unless overridden by `ui.title` in argocd-cm.
+const DEFAULT_UI_TITLE = 'Argo CD';
+
 // Guards the SSO re-authentication redirect below. Multiple watch streams can emit 401s
 // simultaneously when a session expires; without this, each one reassigns
 // window.location.href and cancels the previous in-flight navigation to the identity
@@ -303,7 +306,7 @@ export class App extends React.Component<
                     <link rel='icon' type='image/png' href={`${base}assets/favicon/favicon-32x32.png`} sizes='32x32' />
                     <link rel='icon' type='image/png' href={`${base}assets/favicon/favicon-16x16.png`} sizes='16x16' />
                 </Helmet>
-                <PageContext.Provider value={{title: 'Argo CD'}}>
+                <PageContext.Provider value={{title: this.state.authSettings?.uiTitle || DEFAULT_UI_TITLE}}>
                     <Provider value={contextApis}>
                         <QueryClientProvider client={this.queryClient}>
                             {/*
@@ -409,16 +412,19 @@ export class App extends React.Component<
             path: extension.path,
             iconClassName: `fa ${extension.icon}`
         });
-        const component = () => (
-            <>
-                <Helmet>
-                    <title>{extension.title} - Argo CD</title>
-                </Helmet>
-                <Page title={extension.title}>
-                    <extension.component />
-                </Page>
-            </>
-        );
+        const component = () => {
+            const {title: pageTitle} = React.useContext(PageContext);
+            return (
+                <>
+                    <Helmet>
+                        <title>{`${extension.title} - ${pageTitle}`}</title>
+                    </Helmet>
+                    <Page title={extension.title}>
+                        <extension.component />
+                    </Page>
+                </>
+            );
+        };
         extendedRoutes[extension.path] = {
             component: component as React.ComponentType<React.ComponentProps<any>>
         };
